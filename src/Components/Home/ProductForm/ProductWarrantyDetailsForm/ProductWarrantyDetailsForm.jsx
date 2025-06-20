@@ -6,6 +6,10 @@ import FormHeading from "../../../common/form/FormHeading.jsx";
 const ProductWarrantyDetailsForm = ({ handleBackFormRendering }) => {
     return (
         <form className="max-w-sm mx-auto">
+            <Button type="button" onClick={handleBackFormRendering}>
+                Go Back
+            </Button>
+
             <FormHeading heading="Product Warranty Details" />
 
             <InputField
