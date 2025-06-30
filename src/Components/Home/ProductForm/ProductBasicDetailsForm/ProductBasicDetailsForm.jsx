@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 import FormHandlingButton from "../../../common/form/FormHandlingButton.jsx";
 import FormHeading from "../../../common/form/FormHeading.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { storeProductBasicDetails } from "../../../../utilities/slices/productBasicDetailsSlice.js";
+import {
+    resetProductBasicDetails,
+    storeProductBasicDetails,
+} from "../../../../utilities/slices/productBasicDetailsSlice.js";
 import { useEffect, useState } from "react";
 
 const ProductBasicDetailsForm = ({
@@ -12,14 +15,17 @@ const ProductBasicDetailsForm = ({
     handleNextFormRendering,
 }) => {
     const [existingProductDetails, setExistingProductDetails] = useState({});
+
     const dispatch = useDispatch();
+
     const alreadyAddedProductDetails = useSelector(
-        (state) => state.productDetails.productBasicDetails,
+        (state) => state.productDetails.product.productBasicDetails,
     );
 
     useEffect(() => {
         setExistingProductDetails(alreadyAddedProductDetails);
     }, [alreadyAddedProductDetails]);
+
     const handleInputField = (event) => {
         const { name, value } = event.target;
         //console.log(name, value);
@@ -32,13 +38,20 @@ const ProductBasicDetailsForm = ({
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        dispatch(storeProductBasicDetails(productBasicDetails));
-
+        if (productBasicDetails.product_name !== "") {
+            dispatch(storeProductBasicDetails(productBasicDetails));
+            handleNextFormRendering();
+            return;
+        }
+        dispatch(storeProductBasicDetails(existingProductDetails));
         handleNextFormRendering();
     };
 
-    console.log(existingProductDetails);
+    //console.log(existingProductDetails);
+
+    const handleReset = () => {
+        dispatch(resetProductBasicDetails());
+    };
 
     return (
         <form className="max-w-sm mx-auto" onSubmit={handleSubmit}>
@@ -50,7 +63,6 @@ const ProductBasicDetailsForm = ({
                 labelName="Product Name"
                 value={existingProductDetails.product_name}
                 handleInputField={handleInputField}
-
             />
             <InputField
                 type="number"
@@ -58,7 +70,6 @@ const ProductBasicDetailsForm = ({
                 labelName="Product Quantity"
                 value={existingProductDetails.product_quantity}
                 handleInputField={handleInputField}
-
             />
             <InputField
                 type="number"
@@ -66,13 +77,23 @@ const ProductBasicDetailsForm = ({
                 labelName="Product Price"
                 value={existingProductDetails.product_price}
                 handleInputField={handleInputField}
-
             />
 
-            <FormHandlingButton
-                buttonName="Fill Warranty Details"
-                btnStyle="text-white bg-blue-700 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            />
+            <div className="flex justify-between">
+                <button
+                    className="text-white bg-blue-700 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                    type="button"
+                    onClick={handleReset}
+                >
+                    Reset
+                </button>
+
+                <FormHandlingButton
+                    buttonName="Fill Warranty Details"
+                    type="submit"
+                    btnStyle="text-white bg-blue-700 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                />
+            </div>
         </form>
     );
 };

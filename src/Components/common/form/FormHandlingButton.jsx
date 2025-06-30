@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 
-const FormHandlingButton = ({ buttonName, btnStyle }) => {
+const FormHandlingButton = ({ buttonName, btnStyle, type }) => {
     return (
-        <button type="submit" className={btnStyle}>
+        <button type={type} className={btnStyle}>
             {buttonName}
         </button>
     );

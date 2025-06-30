@@ -11,7 +11,7 @@ const InputField = ({ type, name, value, labelName, handleInputField }) => {
                 id={name}
                 name={name}
                 className="input-field"
-                value={value || ''}
+                defaultValue={value || ""}
                 onChange={handleInputField}
                 required
             />
